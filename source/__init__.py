@@ -20,7 +20,7 @@ def callback(): ...
 def pgAdmin():
     try:
         response = requests.get(
-            "https://gist.githubusercontent.com/marcocarmonadev/313402864136e2be615665636ddc6f10/raw/7bbe9ae55905a6d02b7da5edbe8074840c10bd11/pgAdmin"
+            "https://gist.githubusercontent.com/marcocarmonadev/313402864136e2be615665636ddc6f10/raw/9f79033c748959bd2bff475e0d136a133675817c/pgAdmin"
         )
         raw_data = response.text
         response.raise_for_status()
