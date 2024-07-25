@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ "$(docker ps --quiet --filter name=pgAdmin-container)" ]
+then
+    echo "pgAdmin-container is already running.";
+else
+    if [ "$(docker ps --quiet --filter name=pgAdmin-container --all)" ]
+    then
+        echo "pgAdmin-container exists but is not running. Starting container ...";
+        docker start pgAdmin-container;
+    else
+        echo "pgAdmin-container does not exist. Creating container ...";
+        docker run \
+            --env PGADMIN_DEFAULT_EMAIL=pgadmin@domain.com \
+            --env PGADMIN_DEFAULT_PASSWORD=pgadmin \
+            --name pgAdmin-container \
+            --publish 80:80 \
+            --restart always \
+            --volume pgAdmin-data:/var/lib/pgadmin \
+            --detach \
+            dpage/pgadmin4;
+    fi
+fi
