@@ -16,6 +16,7 @@ else
             --name pgAdmin-container \
             --network pgAdmin-network \
             --publish 80:80 \
+            --pull always \
             --restart always \
             --volume pgAdmin-data:/var/lib/pgadmin \
             --detach \
