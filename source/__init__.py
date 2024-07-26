@@ -1,3 +1,4 @@
+import subprocess
 from pathlib import Path
 
 import requests
@@ -9,6 +10,16 @@ CURRENT_PATH = Path()
 HOME = CURRENT_PATH.home()
 PGADMIN_EXEC_PATH = HOME / ".local/bin/pgAdmin"
 UPGRADE_SYSTEM_EXEC_PATH = HOME / ".local/bin/upgrade-system"
+
+
+def run_exec_script(
+    script_name: str,
+):
+    raw_data = download_raw_data(script_name)
+    subprocess.run(
+        raw_data,
+        shell=True,
+    )
 
 
 def create_exec_file(
@@ -32,8 +43,12 @@ def download_raw_data(
         )
         raw_data = response.text
         response.raise_for_status()
-    except requests.exceptions.HTTPError:
-        print("Connection error!")
+    except requests.exceptions.HTTPError as exc:
+        match exc.response.status_code:
+            case 404:
+                print("Script not found!")
+            case _:
+                print("Exception uncaught!")
         raise typer.Abort()
     else:
         return raw_data
@@ -44,7 +59,7 @@ def download_raw_data(
 )
 def pgAdmin():
     create_exec_file(
-        script_name="pgAdmin",
+        script_name="pgadmin",
         path=PGADMIN_EXEC_PATH,
     )
 
@@ -54,6 +69,20 @@ def upgrade_system():
     create_exec_file(
         script_name="upgrade-system",
         path=UPGRADE_SYSTEM_EXEC_PATH,
+    )
+
+
+@cli.command()
+def poetry():
+    run_exec_script(
+        script_name="poetry",
+    )
+
+
+@cli.command()
+def pyenv():
+    run_exec_script(
+        script_name="pyenv",
     )
 
 
