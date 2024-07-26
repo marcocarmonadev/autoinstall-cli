@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+
+
+# sudo apt install gnupg software-properties-common
+# sudo wget -O /etc/apt/keyrings/qgis-archive-keyring.gpg https://download.qgis.org/downloads/qgis-archive-keyring.gpg
+
+# sudo apt update
+# sudo apt install qgis qgis-plugin-grass
+
