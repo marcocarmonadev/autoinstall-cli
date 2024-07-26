@@ -11,6 +11,18 @@ PGADMIN_EXEC_PATH = HOME / ".local/bin/pgAdmin"
 UPGRADE_SYSTEM_EXEC_PATH = HOME / ".local/bin/upgrade-system"
 
 
+def create_exec_file(
+    script_name: str,
+    path: Path,
+):
+    raw_data = download_raw_data(script_name)
+    path.touch(
+        exist_ok=True,
+    )
+    path.write_text(raw_data)
+    path.chmod(0o775)
+
+
 def download_raw_data(
     script_name: str,
 ):
@@ -21,7 +33,7 @@ def download_raw_data(
         raw_data = response.text
         response.raise_for_status()
     except requests.exceptions.HTTPError:
-        print("Connection error.")
+        print("Connection error!")
         raise typer.Abort()
     else:
         return raw_data
@@ -31,25 +43,23 @@ def download_raw_data(
     name="pgAdmin",
 )
 def pgAdmin():
-    raw_data = download_raw_data(
+    create_exec_file(
         script_name="pgAdmin",
+        path=PGADMIN_EXEC_PATH,
     )
-    PGADMIN_EXEC_PATH.touch(
-        exist_ok=True,
-    )
-    PGADMIN_EXEC_PATH.write_text(raw_data)
-    PGADMIN_EXEC_PATH.chmod(0o775)
-    print("Reload your shell.")
 
 
 @cli.command()
 def upgrade_system():
-    raw_data = download_raw_data(
+    create_exec_file(
         script_name="upgrade-system",
+        path=UPGRADE_SYSTEM_EXEC_PATH,
     )
-    UPGRADE_SYSTEM_EXEC_PATH.touch(
-        exist_ok=True,
-    )
-    UPGRADE_SYSTEM_EXEC_PATH.write_text(raw_data)
-    UPGRADE_SYSTEM_EXEC_PATH.chmod(0o775)
-    print("Reload your shell.")
+
+
+@cli.command()
+def all():
+    print("Installing pgAdmin ...")
+    pgAdmin()
+    print("Installing upgrade-system ...")
+    upgrade_system()
