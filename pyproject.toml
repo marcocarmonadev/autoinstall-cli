@@ -20,4 +20,4 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.poetry.scripts]
-autoinstall = 'source:cli'
+autoinstall = 'source.frameworks_and_devices.cli:app'
